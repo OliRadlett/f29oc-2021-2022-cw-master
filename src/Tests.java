@@ -29,6 +29,9 @@ public class Tests {
 		System.out.println("This test books 1 lane for 6 players in the name of 'Jane' and then creates 7 player threads that try to login.");
 		System.out.println("Expected behaviour: 6 players return from tenPinManager.playerLogin, 1 player indefinitely waits");
 
+		// Ensure threads returned count is reset before each test
+		nThreadsReturned = new AtomicInteger(0);
+
 		TenPinManager tenPinManager = new TenPinManager();
 		tenPinManager.bookLane("Jane", 6);
 		
@@ -41,6 +44,29 @@ public class Tests {
 		
 		//Test result
 		if(nThreadsReturned.get() == 6) System.out.println ("Test = SUCCESS");
+		else System.out.println ("Test = FAIL: " + nThreadsReturned.get() +" returned.");
+	}
+
+	public void test_ur2 (){
+		System.out.println("Test 2 - tests FIFO booking order and waiting until room is full");
+		// Currently breaks ur1
+
+		nThreadsReturned = new AtomicInteger(0);
+
+		TenPinManager tenPinManager = new TenPinManager();
+		tenPinManager.bookLane("John", 6);
+		tenPinManager.bookLane("John", 3);
+
+		// 5 people try and log in
+		for (int i=0; i < 5; i++) {
+			PlayerThread player = new PlayerThread(tenPinManager, "John");
+			player.start();
+		}
+		//Now wait for player threads to do their thing:
+		try {Thread.sleep(testTimeout);} catch (InterruptedException e) {e.printStackTrace();}
+
+		//Test result
+		if(nThreadsReturned.get() == 0) System.out.println ("Test = SUCCESS");
 		else System.out.println ("Test = FAIL: " + nThreadsReturned.get() +" returned.");
 	}
 	
@@ -56,7 +82,5 @@ public class Tests {
 	        nThreadsReturned.incrementAndGet();
 	    };	
 	};
-	
-	// WRITE YOUR OTHER TESTS HERE ...
 
 }
