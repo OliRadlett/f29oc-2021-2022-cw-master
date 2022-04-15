@@ -49,7 +49,7 @@ public class Tests {
 
 	public void test_ur2 (){
 		System.out.println("Test 2 - tests FIFO booking order and waiting until room is full");
-		// Currently breaks ur1
+		System.out.println("Expected behaviour: the 5 players try and join the first room but they all wait because the room is isn't full");
 
 		nThreadsReturned = new AtomicInteger(0);
 

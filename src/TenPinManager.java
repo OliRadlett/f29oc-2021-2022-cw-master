@@ -70,6 +70,12 @@ public class TenPinManager implements Manager {
 
 				try {
 
+					while (booking.isFull()) {
+
+						queue.await();
+
+					}
+
 					booking.connectPlayer(bookersName);
 
 					while (!booking.isFull()) {
@@ -77,14 +83,6 @@ public class TenPinManager implements Manager {
 						queue.await();
 
 					}
-
-					while (booking.isFull()) {
-
-						queue.await();
-
-					}
-
-					queue.signalAll();
 
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
@@ -94,7 +92,7 @@ public class TenPinManager implements Manager {
 
 //				break;
 
-			}
+			} // ooh could have an else if here
 
 		}
 
@@ -120,7 +118,7 @@ public class TenPinManager implements Manager {
 			this.playersQueue = new ArrayList<>();
 
 			//temp
-			roomID = r.nextInt(0, 999);
+			roomID = r.nextInt(999);
 
 			System.out.println("Booked a lane under the name '" + bookersName + "' for " + nPlayers + " people with ID: [" + roomID + "]");
 
@@ -161,20 +159,22 @@ public class TenPinManager implements Manager {
 
 						full = true;
 						players = playersQueue;
+						queue.signalAll();
 						System.out.println("Room [" + roomID + "] is full with " + players.size() + " people in");
 
 					}
 
 				}
 
-			}
+			} else {
 
-			// Shouldn't need to check if the lane is full here but we can do if we need to
-//			players.add(playerName);
-//			System.out.println("Player '" + playerName + "' joined room '" + bookersName + "', position: " + players.size() + " with ID: [" + roomID + "]");
-//
-//			if (players.size() == nPlayers)
-//				full = true;
+				try {
+					queue.await();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+
+			}
 
 		}
 
