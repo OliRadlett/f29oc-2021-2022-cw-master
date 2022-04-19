@@ -30,7 +30,7 @@ public class Tests {
 		System.out.println("Expected behaviour: 6 players return from tenPinManager.playerLogin, 1 player indefinitely waits");
 
 		// Ensure threads returned count is reset before each test
-		nThreadsReturned = new AtomicInteger(0);
+		nThreadsReturned.set(0);
 
 		TenPinManager tenPinManager = new TenPinManager();
 		tenPinManager.bookLane("Jane", 6);
@@ -51,7 +51,7 @@ public class Tests {
 		System.out.println("Test 2 - tests FIFO booking order and waiting until room is full");
 		System.out.println("Expected behaviour: the 5 players try and join the first room but they all wait because the room is isn't full");
 
-		nThreadsReturned = new AtomicInteger(0);
+		nThreadsReturned.set(0);
 
 		TenPinManager tenPinManager = new TenPinManager();
 		tenPinManager.bookLane("John", 6);
