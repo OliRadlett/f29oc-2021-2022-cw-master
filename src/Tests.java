@@ -88,7 +88,7 @@ public class Tests {
 		}
 
 		// 4 people try and log in to Fred's room
-		for (int i=0; i < 5; i++) {
+		for (int i=0; i < 4; i++) {
 			PlayerThread player = new PlayerThread(tenPinManager, "Fred");
 			player.start();
 		}
