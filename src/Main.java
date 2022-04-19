@@ -11,6 +11,10 @@ public class Main {
 		tests.test_ur2();
 		System.out.println("---------------------------");
 		tests.test_ur3();
+		System.out.println("---------------------------");
+		tests.test_ur4();
+		System.out.println("---------------------------");
+//		tests.test_ur5();
 
 	}
 
