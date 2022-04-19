@@ -52,6 +52,10 @@ public class TenPinManager implements Manager {
 		// When queue is full copy queue to room and set room to full
 		// Unblock thread
 
+		Random r = new Random();
+		int test = r.nextInt(99);
+//		System.out.println("Thread id: " + test);
+
 		for (Booking booking : bookings) {
 
 			if (booking.getBookersName().equals(bookersName) && !booking.isFull()) {
@@ -82,10 +86,23 @@ public class TenPinManager implements Manager {
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
 				} finally {
+
+					lock.unlock();
+
+				}
+
+			} else if (booking.bookersName.equals(bookersName) && booking.isFull()) {
+
+				try {
+					lock.lockInterruptibly();
+					queue.await();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				} finally {
 					lock.unlock();
 				}
 
-			} // ooh could have an else if here
+			}
 
 		}
 
