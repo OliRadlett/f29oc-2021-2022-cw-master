@@ -6,13 +6,21 @@ public class Main {
 		
 		Tests tests = new Tests();
 		
-		tests.test_basic_1();
+		tests.test_ur1_1();
 		System.out.println("---------------------------");
-		tests.test_ur2();
+		tests.test_ur1_2();
 		System.out.println("---------------------------");
-		tests.test_ur3();
+		tests.test_ur2_1();
 		System.out.println("---------------------------");
-		tests.test_ur4();
+		tests.test_ur2_2();
+		System.out.println("---------------------------");
+		tests.test_ur3_1();
+		System.out.println("---------------------------");
+		tests.test_ur3_2();
+		System.out.println("---------------------------");
+		tests.test_ur4_1();
+		System.out.println("---------------------------");
+		tests.test_ur4_2();
 		System.out.println("---------------------------");
 //		tests.test_ur5();
 

@@ -45,12 +45,6 @@ public class TenPinManager implements Manager {
 
 	public void playerLogin(String bookersName) {
 
-		// Check not full
-		// Block thread
-		// Add player to queue
-		// When queue is full copy queue to room and set room to full
-		// Unblock thread
-
 		boolean laneExists = false;
 
 		Random r = new Random();
@@ -63,7 +57,6 @@ public class TenPinManager implements Manager {
 
 				laneExists = true;
 
-				// Double check this is reliable
 				try {
 					lock.lockInterruptibly();
 				} catch (InterruptedException e) {
@@ -118,7 +111,6 @@ public class TenPinManager implements Manager {
 			try {
 				lock.lockInterruptibly();
 				queue.await();
-				System.out.println(test + " is now sleeping");
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			} finally {
@@ -126,8 +118,6 @@ public class TenPinManager implements Manager {
 			}
 
 		}
-
-		System.out.println(test + " is now awake");
 
 	}
 
@@ -155,9 +145,6 @@ public class TenPinManager implements Manager {
 
 			System.out.println("Booked a lane under the name '" + bookersName + "' for " + nPlayers + " people with ID: [" + roomID + "]");
 
-
-			// Need to make sure they're waking up
-			System.out.println("Waking up");
 			lock.lock();
 			queue.signalAll();
 			lock.unlock();
