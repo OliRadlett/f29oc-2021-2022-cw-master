@@ -39,7 +39,6 @@ public class TenPinManager implements Manager {
 
 	public void bookLane(String bookersName, int nPlayers) {
 
-		// Probably need this at some point but not for UR1
 		bookings.add(new Booking(bookersName, nPlayers));
 
 	};
@@ -52,6 +51,8 @@ public class TenPinManager implements Manager {
 		// When queue is full copy queue to room and set room to full
 		// Unblock thread
 
+		boolean laneExists = false;
+
 		Random r = new Random();
 		int test = r.nextInt(99);
 //		System.out.println("Thread id: " + test);
@@ -59,6 +60,8 @@ public class TenPinManager implements Manager {
 		for (Booking booking : bookings) {
 
 			if (booking.getBookersName().equals(bookersName) && !booking.isFull()) {
+
+				laneExists = true;
 
 				// Double check this is reliable
 				try {
@@ -93,6 +96,8 @@ public class TenPinManager implements Manager {
 
 			} else if (booking.bookersName.equals(bookersName) && booking.isFull()) {
 
+				laneExists = true;
+
 				try {
 					lock.lockInterruptibly();
 					queue.await();
@@ -106,7 +111,25 @@ public class TenPinManager implements Manager {
 
 		}
 
-	};
+		// Make them wait
+		// Just need to wake them up again
+		if (!laneExists) {
+
+			try {
+				lock.lockInterruptibly();
+				queue.await();
+				System.out.println(test + " is now sleeping");
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			} finally {
+				lock.unlock();
+			}
+
+		}
+
+		System.out.println(test + " is now awake");
+
+	}
 
 	private class Booking {
 
@@ -131,6 +154,13 @@ public class TenPinManager implements Manager {
 			roomID = r.nextInt(999);
 
 			System.out.println("Booked a lane under the name '" + bookersName + "' for " + nPlayers + " people with ID: [" + roomID + "]");
+
+
+			// Need to make sure they're waking up
+			System.out.println("Waking up");
+			lock.lock();
+			queue.signalAll();
+			lock.unlock();
 
 		}
 
