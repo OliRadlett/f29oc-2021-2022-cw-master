@@ -69,6 +69,37 @@ public class Tests {
 		if(nThreadsReturned.get() == 0) System.out.println ("Test = SUCCESS");
 		else System.out.println ("Test = FAIL: " + nThreadsReturned.get() +" returned.");
 	}
+
+	public void test_ur3 (){
+		System.out.println("Test 3 - Multiple bookings by multiple bookers followed by logins");
+		System.out.println("Expected behaviour: The first three threads to join Fred's room are accepted and the rest are blocked");
+
+		nThreadsReturned.set(0);
+
+		TenPinManager tenPinManager = new TenPinManager();
+		tenPinManager.bookLane("Jeremy", 6);
+		tenPinManager.bookLane("Jeremy", 3);
+		tenPinManager.bookLane("Fred", 3);
+
+		// 5 people try and log in to Jeremy's room
+		for (int i=0; i < 5; i++) {
+			PlayerThread player = new PlayerThread(tenPinManager, "Jeremy");
+			player.start();
+		}
+
+		// 4 people try and log in to Fred's room
+		for (int i=0; i < 5; i++) {
+			PlayerThread player = new PlayerThread(tenPinManager, "Fred");
+			player.start();
+		}
+
+		//Now wait for player threads to do their thing:
+		try {Thread.sleep(testTimeout);} catch (InterruptedException e) {e.printStackTrace();}
+
+		//Test result
+		if(nThreadsReturned.get() == 3) System.out.println ("Test = SUCCESS");
+		else System.out.println ("Test = FAIL: " + nThreadsReturned.get() +" returned.");
+	}
 	
 	private class PlayerThread extends Thread {
 		TenPinManager manager;
