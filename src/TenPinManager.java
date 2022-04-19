@@ -46,16 +46,11 @@ public class TenPinManager implements Manager {
 
 	public void playerLogin(String bookersName) {
 
-		// i now want to change this so that if things dont work immediately they wait and try again
-		// also need to make it so that threads are/stay blocked until the room is exactly full
-
 		// Check not full
 		// Block thread
 		// Add player to queue
 		// When queue is full copy queue to room and set room to full
 		// Unblock thread
-
-		// it works for ur2 but breaks for ur1 because it doesnt time out the last thread if a room is full
 
 		for (Booking booking : bookings) {
 
@@ -89,8 +84,6 @@ public class TenPinManager implements Manager {
 				} finally {
 					lock.unlock();
 				}
-
-//				break;
 
 			} // ooh could have an else if here
 
@@ -141,13 +134,6 @@ public class TenPinManager implements Manager {
 		}
 
 		public void connectPlayer(String playerName) {
-
-			// Most of this happens in login
-			// Check not full
-			// Block thread
-			// Add player to queue
-			// When queue is full copy queue to room and set room to full
-			// Unblock thread
 
 			if (!isFull()) {
 
